@@ -63,6 +63,10 @@ The application is deployed to Vercel and rebuilds automatically on push to the 
 
 All HAA projects are created, managed, and maintained by the Houston Arts Alliance Data and Analytics team-of-one, HAA's Senior Data Analytics Manager. If you'd like to contribute or report an issue, please open an issue or pull request on this repository.
 
+## Data & Analytics
+ 
+All data, data architecture, scoring methodology, analytics, and related work in this project are the sole creation of HAA's Senior Data and Analytics Manager, who maintains full and exclusive ownership of every aspect of the data pipeline, from collection and modeling through analysis and reporting, including public assets.
+
 ## License
 
 This project is licensed under the [MIT License](LICENSE.md).
