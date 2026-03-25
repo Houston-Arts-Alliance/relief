@@ -1,0 +1,1456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAA SOAR Disaster Relief Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #04163F;
+            --accent: #f0c148;
+            --text: #04163F;
+            --light-gray: #f8f9fa;
+            --border: rgba(4, 22, 63, 0.12);
+            --shadow-sm: 0 1px 3px rgba(4, 22, 63, 0.06);
+            --shadow-md: 0 2px 8px rgba(4, 22, 63, 0.08);
+            --shadow-lg: 0 4px 16px rgba(4, 22, 63, 0.10);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text);
+            background: #ffffff;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, var(--primary) 0%, #0a2454 100%);
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .hero h1 {
+            color: white;
+            font-size: clamp(24px, 4vw, 36px);
+            font-weight: 300;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero p {
+            color: var(--accent);
+            font-size: 18px;
+            font-weight: 300;
+        }
+
+        .section {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 0 0 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary);
+            margin: 16px 0 8px;
+        }
+
+        p {
+            margin-bottom: 12px;
+            color: var(--text);
+            font-size: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="number"],
+        input[type="date"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            background: white;
+            font-family: inherit;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(240, 193, 72, 0.1);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 8px 0;
+        }
+
+        .option-card {
+            flex: 1;
+            min-width: 150px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .option-card:hover {
+            border-color: var(--accent);
+            background: var(--light-gray);
+        }
+
+        .option-card input {
+            margin-right: 6px;
+        }
+
+        .option-card.selected {
+            background: var(--accent);
+            color: var(--primary);
+            border-color: var(--accent);
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 6px;
+            margin: 8px 0;
+        }
+
+        .checkbox-item {
+            padding: 6px 10px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .checkbox-item:hover {
+            background: var(--light-gray);
+        }
+
+        .checkbox-item input {
+            margin-right: 6px;
+        }
+
+        .checkbox-item.checked {
+            background: var(--accent);
+            color: var(--primary);
+            border-color: var(--accent);
+        }
+
+        .btn {
+            padding: 10px 24px;
+            font-size: 15px;
+            font-weight: 500;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: #0a2454;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            background: var(--light-gray);
+            color: var(--primary);
+            margin-right: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .progress-container {
+            background: var(--light-gray);
+            height: 4px;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--accent);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .svi-map {
+            width: 100%;
+            height: 400px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            margin: 12px 0;
+        }
+
+        .info-box {
+            background: var(--light-gray);
+            padding: 12px;
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        .results-container {
+            background: linear-gradient(135deg, var(--primary) 0%, #0a2454 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 8px;
+            margin-top: 24px;
+            text-align: center;
+        }
+
+        .score-display {
+            font-size: 48px;
+            font-weight: 200;
+            color: var(--accent);
+            margin: 12px 0;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: white;
+            color: var(--primary);
+            border-radius: 20px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .external-link {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .external-link:after {
+            content: " ↗";
+            font-size: 12px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .county-question {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .word-count {
+            font-size: 12px;
+            color: #666;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .word-count.over-limit {
+            color: #dc3545;
+            font-weight: 500;
+        }
+
+        .consent-box {
+            background: var(--light-gray);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 24px 0;
+        }
+
+        .consent-box h3 {
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        .consent-box p {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .signature-field {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .signature-field label {
+            font-weight: 600;
+        }
+
+        .discipline-followup {
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--light-gray);
+            border-radius: 4px;
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 16px;
+            background: var(--light-gray);
+            border: none;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+            cursor: default;
+            font-size: 14px;
+            font-weight: 500;
+            color: #666;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .tab.active {
+            background: white;
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            margin-bottom: -2px;
+        }
+
+        .tab.completed {
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+        .tab.completed:hover {
+            background: #e9ecef;
+        }
+
+        .tab-number {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            background: #ddd;
+            border-radius: 50%;
+            margin-right: 8px;
+            font-size: 12px;
+        }
+
+        .tab.active .tab-number {
+            background: var(--accent);
+            color: var(--primary);
+        }
+
+        .tab.completed .tab-number {
+            background: var(--primary);
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .tab {
+                min-width: 100px;
+                padding: 10px 8px;
+                font-size: 12px;
+            }
+            .tab-number {
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                margin-right: 4px;
+                font-size: 11px;
+            }
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>Houston Arts Alliance SOAR Disaster Relief Fund</h1>
+        <p>Supporting Our Arts Recovery</p>
+    </div>
+
+    <div class="container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar" style="width: 14%"></div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-container">
+            <button class="tab active" id="tab1" onclick="goToPage(1)">
+                <span class="tab-number">1</span>
+                <span class="tab-label">About</span>
+            </button>
+            <button class="tab" id="tab2" onclick="goToPage(2)">
+                <span class="tab-number">2</span>
+                <span class="tab-label">Information</span>
+            </button>
+            <button class="tab" id="tab3" onclick="goToPage(3)">
+                <span class="tab-number">3</span>
+                <span class="tab-label">Eligibility</span>
+            </button>
+            <button class="tab" id="tab4" onclick="goToPage(4)">
+                <span class="tab-number">4</span>
+                <span class="tab-label">Assessment</span>
+            </button>
+        </div>
+
+        <!-- Page 1: Landing -->
+        <div class="section active" id="page1">
+            <h2>About This Program</h2>
+            <p>The Houston Arts Alliance Disaster Relief Fund helps individual artists in Houston recover from emergencies and major disruptions, from natural disasters to public-health or infrastructure crises, by providing rapid financial assistance. Examples of eligible events include hurricanes, floods, public-health emergencies, extended utility outages, or other incidents that substantially disrupt artistic work or income.</p>
+            
+            <h3>Who Can Apply</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 4px 0;">✓ Individual artists</li>
+                <li style="padding: 4px 0;">✓ Residents within Houston city limits</li>
+                <li style="padding: 4px 0;">✓ Ages 18 and older</li>
+                <li style="padding: 4px 0;">✓ Those who have experienced disaster-related hardship</li>
+            </ul>
+            
+            <div class="btn-group">
+                <div></div>
+                <button class="btn btn-primary" onclick="nextPage()">Begin Application</button>
+            </div>
+        </div>
+
+        <!-- Page 2: Basic Information -->
+        <div class="section" id="page2">
+            <h2>Basic Information</h2>
+            
+            <div class="form-group">
+                <label for="fullName">Your Name *</label>
+                <input type="text" id="fullName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="address1">Street Address *</label>
+                <input type="text" id="address1" placeholder="123 Main Street" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="address2">Address Line 2</label>
+                <input type="text" id="address2" placeholder="Apt, Suite, Unit, etc.">
+            </div>
+            
+            <div class="grid-3">
+                <div class="form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" value="Houston" required>
+                </div>
+                <div class="form-group">
+                    <label for="state">State *</label>
+                    <select id="state" required>
+                        <option value="TX" selected>Texas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="zip">ZIP Code *</label>
+                    <input type="text" id="zip" pattern="[0-9]{5}" maxlength="5" required>
+                </div>
+            </div>
+            
+            <div class="grid-2">
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="dob">Date of Birth *</label>
+                <input type="date" id="dob" required>
+            </div>
+
+            <h3>Online Presence</h3>
+            <p>Please provide at least one link to your website, portfolio, social media, or CV so we can learn more about your artistic practice.</p>
+            
+            <div class="form-group">
+                <label for="website">Website or Portfolio URL</label>
+                <input type="url" id="website" placeholder="https://www.yourwebsite.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="socialMedia">Social Media Profile URL</label>
+                <input type="url" id="socialMedia" placeholder="https://www.instagram.com/yourhandle">
+            </div>
+            
+            <div class="form-group">
+                <label for="cvLink">CV or Resume URL</label>
+                <input type="url" id="cvLink" placeholder="https://drive.google.com/your-cv">
+            </div>
+            
+            <h3>Household Size</h3>
+            <p>How many people live in your household, including you? Count everyone who usually lives and eats here, even if they are temporarily away right now.</p>
+            
+            <div class="option-group">
+                <label class="option-card">
+                    <input type="radio" name="householdSize" value="0" onchange="showHouseholdBreakdown()">
+                    1–2 people
+                </label>
+                <label class="option-card">
+                    <input type="radio" name="householdSize" value="1" onchange="showHouseholdBreakdown()">
+                    3–4 people
+                </label>
+                <label class="option-card">
+                    <input type="radio" name="householdSize" value="2" onchange="showHouseholdBreakdown()">
+                    5 or more people
+                </label>
+            </div>
+            
+            <div id="householdBreakdown" class="hidden" style="margin-top: 16px;">
+                <p style="font-weight: 500;">Please provide a breakdown:</p>
+                <div class="grid-3">
+                    <div class="form-group">
+                        <label for="adults">Adults 18–64</label>
+                        <input type="number" id="adults" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="seniors">Older adults 65+</label>
+                        <input type="number" id="seniors" min="0" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="children">Children under 18</label>
+                        <input type="number" id="children" min="0" value="0">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">Back</button>
+                <button class="btn btn-primary" onclick="nextPage()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Page 3: Eligibility & SVI -->
+        <div class="section" id="page3">
+            <h2>Eligibility Check</h2>
+            <p>Please confirm your eligibility before proceeding.</p>
+            
+            <div class="form-group">
+                <label>Are you at least 18 years of age?</label>
+                <div class="option-group">
+                    <label class="option-card">
+                        <input type="radio" name="age18" value="yes">
+                        Yes, I am 18 or older
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="age18" value="no">
+                        No, I am under 18
+                    </label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>Do you reside within City of Houston limits? 
+                    <a href="https://www.houstontx.gov/council/whoismycm.html" target="_blank" class="external-link">Use this tool if unsure</a>
+                </label>
+                <div class="option-group">
+                    <label class="option-card">
+                        <input type="radio" name="houstonLimits" value="yes" onchange="checkHoustonLimits()">
+                        Yes, within Houston limits
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="houstonLimits" value="no" onchange="checkHoustonLimits()">
+                        No, outside Houston limits
+                    </label>
+                </div>
+            </div>
+            
+            <div id="countyQuestion" class="county-question hidden">
+                <label>Do you live in Greater Houston in any of these counties?
+                    <a href="https://texascountiesdeliver.org/mycounty/" target="_blank" class="external-link">Use this tool if unsure</a>
+                </label>
+                <p style="font-size: 13px; opacity: 0.8;">Note: if you're temporarily displaced, select the county of your primary residence.</p>
+                <select id="countySelect">
+                    <option value="">Select a county...</option>
+                    <option value="Austin">Austin</option>
+                    <option value="Brazoria">Brazoria</option>
+                    <option value="Chambers">Chambers</option>
+                    <option value="Fort Bend">Fort Bend</option>
+                    <option value="Galveston">Galveston</option>
+                    <option value="Harris">Harris</option>
+                    <option value="Liberty">Liberty</option>
+                    <option value="Montgomery">Montgomery</option>
+                    <option value="San Jacinto">San Jacinto</option>
+                    <option value="Waller">Waller</option>
+                    <option value="none">None of these</option>
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label>Are you an artist?</label>
+                <div class="option-group">
+                    <label class="option-card">
+                        <input type="radio" name="isArtist" value="yes" onchange="showDisciplineQuestion()">
+                        Yes
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="isArtist" value="no" onchange="showDisciplineQuestion()">
+                        No
+                    </label>
+                </div>
+            </div>
+
+            <div id="disciplineQuestion" class="discipline-followup hidden">
+                <div class="form-group">
+                    <label for="artisticDiscipline">What is your primary artistic discipline? *</label>
+                    <select id="artisticDiscipline" required>
+                        <option value="">Select a discipline...</option>
+                        <option value="Art + Social Practice">Art + Social Practice</option>
+                        <option value="Craft">Craft</option>
+                        <option value="Dance">Dance</option>
+                        <option value="Design">Design</option>
+                        <option value="Film">Film</option>
+                        <option value="Literary Arts">Literary Arts</option>
+                        <option value="Media Arts">Media Arts</option>
+                        <option value="Multidisciplinary">Multidisciplinary</option>
+                        <option value="Museum">Museum</option>
+                        <option value="Music">Music</option>
+                        <option value="Performance Art">Performance Art</option>
+                        <option value="Performing Arts">Performing Arts</option>
+                        <option value="Preservation">Preservation</option>
+                        <option value="Public Art">Public Art</option>
+                        <option value="Theater">Theater</option>
+                        <option value="Visual Arts">Visual Arts</option>
+                    </select>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 24px;">Social Vulnerability Index</h3>
+            <p>Look up your address on the map below then enter your neighborhood's SVI score.</p>
+            
+            <iframe class="svi-map" 
+                src="https://ghcf.maps.arcgis.com/apps/Embed/index.html?webmap=5343ec256dde410094b3f5e2dba21728&extent=-96.8672,28.8599,-93.184,30.6293&home=true&zoom=true&previewImage=false&scale=true&search=true&searchextent=true&details=true&legend=true&active_panel=legend&disable_scroll=true&theme=light">
+            </iframe>
+            
+            <div class="form-group">
+                <label for="sviScore">Overall SVI Score (0.00 - 1.00) *</label>
+                <input type="number" id="sviScore" min="0" max="1" step="0.01" placeholder="0.50" required>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">Back</button>
+                <button class="btn btn-primary" onclick="nextPage()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Page 4: Assessment -->
+        <div class="section" id="page4">
+            <h2>Vulnerability Factors</h2>
+            <p>Select all that apply to your household. 
+                <a href="https://www.understandinghouston.org/topic/disasters/vulnerability-impacts" target="_blank" class="external-link">Learn more about social vulnerability</a>
+            </p>
+            
+            <div class="checkbox-grid">
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Age 65 or older
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Chronic illness
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Experiencing food insecurity
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Experiencing homelessness
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Person with a disability
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Limited English proficiency
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Multi-unit building resident
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Mobile home resident
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Low-income household
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> No personal vehicle
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> No current income
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Single parenting
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Pregnant/postpartum
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Recently immigrated
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="vuln-factor" value="1"> Group/transitional housing
+                </label>
+            </div>
+            
+            <h3>Housing Assessment</h3>
+            <p>Select the one that most reflects your current housing situation.</p>
+            
+            <select id="housingStatus" style="width: 100%;" onchange="calculateScore()">
+                <option value="4">Uninhabitable due to structural damage (destroyed/unsafe)</option>
+                <option value="3">Not currently habitable (utility outage/quarantine)</option>
+                <option value="2">Habitable with major damage (needs significant repairs)</option>
+                <option value="1">Habitable with minor damage (needs minor repairs)</option>
+                <option value="0">No physical damage and fully habitable</option>
+            </select>
+            
+            <h3 style="margin-top: 20px;">Assistance Received</h3>
+            
+            <div class="form-group">
+                <label>Since this began, have you received any assistance?</label>
+                <div class="option-group">
+                    <label class="option-card">
+                        <input type="radio" name="receivedAssist" value="yes" onchange="toggleAssistanceDetails()">
+                        Yes
+                    </label>
+                    <label class="option-card">
+                        <input type="radio" name="receivedAssist" value="no" onchange="toggleAssistanceDetails()">
+                        No
+                    </label>
+                </div>
+            </div>
+            
+            <div id="assistanceDetails" class="hidden">
+                <p style="font-weight: 500;">What types of support have you received? (Select all that apply)</p>
+                <div class="checkbox-grid">
+                    <label class="checkbox-item">
+                        <input type="checkbox"> Food and/or water
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox"> Housing or shelter
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox"> Cash or financial assistance
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" onchange="toggleOtherAssist()"> Other
+                    </label>
+                </div>
+                <input type="text" id="otherAssist" class="hidden" placeholder="Specify other assistance" style="margin-top: 8px;">
+            </div>
+            
+            <div class="grid-2" style="margin-top: 16px;">
+                <div class="form-group">
+                    <label>Applied for FEMA assistance?</label>
+                    <select id="femaApp">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Applied for SBA loan/assistance?</label>
+                    <select id="sbaApp">
+                        <option value="no">No</option>
+                        <option value="yes">Yes</option>
+                    </select>
+                </div>
+            </div>
+            
+            <p style="font-weight: 500; margin-top: 16px;">Currently receiving external support? (Select all that apply)</p>
+            <div class="checkbox-grid">
+                <label class="checkbox-item">
+                    <input type="checkbox" class="external-support"> Government assistance
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="external-support"> Charity/nonprofit assistance
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="external-support"> Community/faith support
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="external-support"> Family/friend support
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="external-support" onchange="toggleOtherExternal()"> Other support
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="external-support" id="noSupport"> No external support
+                </label>
+            </div>
+            <input type="text" id="otherExternal" class="hidden" placeholder="Specify other support" style="margin-top: 8px;">
+            
+            <h3>Previous Assistance</h3>
+            <p>Considering any help you've already received for this disaster in the past 30 days, how much assistance do you still need?</p>
+            
+            <select id="needLevel" style="width: 100%;" onchange="calculateScore()">
+                <option value="4">Emergency need: Life-safety at risk/basic needs not met today</option>
+                <option value="3">Major need: Basic needs won't be met within 7 days</option>
+                <option value="2">Moderate need: Important gaps remain</option>
+                <option value="1">Minor need: Most basic needs covered; small gaps remain</option>
+                <option value="0">No current need: Needs are covered</option>
+            </select>
+            
+            <h3>Current Priority Needs</h3>
+            <p>Which of the following do you need right now? (Select all that apply)</p>
+            
+            <div class="checkbox-grid">
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Child/infant supplies
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Clothing
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Debris removal/cleanup
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Documentation/ID replacement
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Essential equipment
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Financial assistance
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Food and/or water
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Housing/safe shelter
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Home repairs (major)
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Home repairs (minor)
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Household essentials
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Hygiene/sanitation
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Language support
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Medical care/medications
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Mental health support
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Transportation
+                </label>
+                <label class="checkbox-item">
+                    <input type="checkbox" class="current-need"> Utilities support
+                </label>
+            </div>
+            
+            <h3>Property Loss</h3>
+            <p>How much of your household's belongings have been lost, destroyed, or spoiled?</p>
+            
+            <select id="belongingsLoss" style="width: 100%;" onchange="calculateScore()">
+                <option value="4">Everything: Nearly all belongings lost/destroyed</option>
+                <option value="3">Most: More than half lost/destroyed</option>
+                <option value="2">Some: A portion lost/destroyed</option>
+                <option value="0">No physical loss</option>
+                <option value="1">No loss but temporarily inaccessible</option>
+                <option value="1">Not sure yet: Unable to assess</option>
+            </select>
+
+            <h3>Impact Statement</h3>
+            <p>Please describe how this disaster has impacted you, your household, and/or your artistic practice. Include any details about damage, displacement, lost income, or other hardships you've experienced.</p>
+            
+            <div class="form-group">
+                <textarea id="impactStatement" rows="8" maxlength="3500" placeholder="Describe how you were impacted by this disaster..." oninput="updateWordCount()"></textarea>
+                <div class="word-count" id="wordCount">0 / 500 words</div>
+            </div>
+            
+            <!-- Assessment Results -->
+            <div class="results-container">
+                <h2 style="color: white; border: none;">Assessment Results</h2>
+                <div class="score-display" id="totalScore">0</div>
+                <p style="color: rgba(255,255,255,0.9);">Priority Score</p>
+                <div class="tier-badge" id="tierBadge">Calculating...</div>
+            </div>
+
+            <!-- Consent Section -->
+            <div class="consent-box">
+                <h3>Consent and Authorization</h3>
+                <p>By submitting this information, you confirm that the details provided are accurate to the best of your knowledge. You understand that submission does not guarantee assistance or resources. You authorize Houston Arts Alliance to share information from this submission with partner agencies or organizations when necessary to address your request.</p>
+                
+                <div class="form-group">
+                    <label class="checkbox-item" style="background: white;">
+                        <input type="checkbox" id="consentCheckbox" onchange="checkConsent()">
+                        I have read and agree to the above statement
+                    </label>
+                </div>
+                
+                <div class="signature-field">
+                    <label for="signatureName">By entering your printed name below, you are providing your signature: *</label>
+                    <input type="text" id="signatureName" placeholder="Enter your full legal name" oninput="checkConsent()">
+                </div>
+            </div>
+            
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="prevPage()">Back</button>
+                <button class="btn btn-primary" id="submitBtn" onclick="submitForm()" disabled>Submit Application</button>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="section" id="successPage">
+            <div style="text-align: center; padding: 40px 20px;">
+                <h2 style="color: #1b9e61; border: none; font-size: 28px;">Application Submitted.</h2>
+                <p style="font-size: 16px; margin: 20px 0;">Thank you for completing the Houston Arts Alliance disaster relief form.</p>
+                <p>We will review your application, and HAA or a partner relief agency will contact you shortly to discuss next steps and available assistance. In the meantime, please stay safe. If you are in immediate danger, contact 911 right away.</p>
+                <div style="margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="location.reload()">Track Your Application</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========================================
+        // LOOK HERE for testing mode: set to false to turn off validation for MD GZ
+        // ========================================
+        const ENABLE_VALIDATION = false;
+        // ========================================
+
+        let currentPage = 1;
+        const totalPages = 4;
+        const completedPages = new Set();
+
+        function updateProgress() {
+            const progress = (currentPage / totalPages) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function updateTabs() {
+            // Update tab states
+            for (let i = 1; i <= totalPages; i++) {
+                const tab = document.getElementById(`tab${i}`);
+                tab.classList.remove('active');
+                
+                if (i === currentPage) {
+                    tab.classList.add('active');
+                }
+                
+                if (completedPages.has(i) || i < currentPage) {
+                    tab.classList.add('completed');
+                } else {
+                    tab.classList.remove('completed');
+                }
+            }
+        }
+
+        function goToPage(pageNum) {
+            // Only allow navigation to completed pages or current page
+            if (pageNum === currentPage || completedPages.has(pageNum) || pageNum < currentPage) {
+                currentPage = pageNum;
+                showPage(currentPage);
+            }
+        }
+
+        function showPage(pageNum) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('page' + pageNum).classList.add('active');
+            updateProgress();
+            updateTabs();
+            window.scrollTo(0, 0);
+            if (pageNum === 4) {
+                calculateScore();
+            }
+        }
+
+        function nextPage() {
+            if (validateCurrentPage()) {
+                completedPages.add(currentPage);
+                currentPage++;
+                if (currentPage <= totalPages) {
+                    showPage(currentPage);
+                }
+            }
+        }
+
+        function prevPage() {
+            currentPage--;
+            if (currentPage >= 1) {
+                showPage(currentPage);
+            }
+        }
+
+        function validateCurrentPage() {
+            // Skip validation if testing mode is enabled
+            if (!ENABLE_VALIDATION) {
+                return true;
+            }
+
+            let isValid = true;
+            const currentSection = document.getElementById(`page${currentPage}`);
+            
+            // Clear previous error states
+            currentSection.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+            });
+            currentSection.querySelectorAll('.error-message').forEach(msg => {
+                msg.classList.remove('show');
+            });
+
+            // Page 2 validation
+            if (currentPage === 2) {
+                const requiredFields = [
+                    { id: 'fullName', label: 'Name' },
+                    { id: 'address1', label: 'Street Address' },
+                    { id: 'city', label: 'City' },
+                    { id: 'zip', label: 'ZIP Code' },
+                    { id: 'phone', label: 'Phone Number' },
+                    { id: 'email', label: 'Email Address' },
+                    { id: 'dob', label: 'Date of Birth' }
+                ];
+
+                requiredFields.forEach(field => {
+                    const input = document.getElementById(field.id);
+                    if (!input.value.trim()) {
+                        input.closest('.form-group').classList.add('error');
+                        showError(input, `${field.label} is required`);
+                        isValid = false;
+                    }
+                });
+
+                // Check at least one online presence link
+                const website = document.getElementById('website').value.trim();
+                const social = document.getElementById('socialMedia').value.trim();
+                const cv = document.getElementById('cvLink').value.trim();
+                
+                if (!website && !social && !cv) {
+                    alert('Please provide at least one link to your website, social media, or CV.');
+                    isValid = false;
+                }
+
+                // Check household size selected
+                const householdSize = document.querySelector('input[name="householdSize"]:checked');
+                if (!householdSize) {
+                    alert('Please select your household size.');
+                    isValid = false;
+                }
+            }
+
+            // Page 3 validation
+            if (currentPage === 3) {
+                // Check age confirmation
+                const age18 = document.querySelector('input[name="age18"]:checked');
+                if (!age18) {
+                    alert('Please confirm your age.');
+                    isValid = false;
+                }
+
+                // Check Houston limits
+                const houstonLimits = document.querySelector('input[name="houstonLimits"]:checked');
+                if (!houstonLimits) {
+                    alert('Please confirm your residency status.');
+                    isValid = false;
+                }
+
+                // If outside Houston, check county selection
+                if (houstonLimits && houstonLimits.value === 'no') {
+                    const county = document.getElementById('countySelect').value;
+                    if (!county) {
+                        alert('Please select your county.');
+                        isValid = false;
+                    }
+                }
+
+                // Check artist status
+                const isArtist = document.querySelector('input[name="isArtist"]:checked');
+                if (!isArtist) {
+                    alert('Please indicate if you are an artist.');
+                    isValid = false;
+                }
+
+                // If artist, check discipline selection
+                if (isArtist && isArtist.value === 'yes') {
+                    const discipline = document.getElementById('artisticDiscipline').value;
+                    if (!discipline) {
+                        alert('Please select your artistic discipline.');
+                        isValid = false;
+                    }
+                }
+
+                // Check SVI score
+                const sviScore = document.getElementById('sviScore').value;
+                if (!sviScore) {
+                    const sviInput = document.getElementById('sviScore');
+                    sviInput.closest('.form-group').classList.add('error');
+                    showError(sviInput, 'SVI Score is required');
+                    isValid = false;
+                }
+            }
+
+            // Page 4 validation
+            if (currentPage === 4) {
+                // Check consent checkbox
+                const consent = document.getElementById('consentCheckbox').checked;
+                if (!consent) {
+                    alert('You must agree to the consent and authorization statement.');
+                    isValid = false;
+                }
+
+                // Check signature
+                const signature = document.getElementById('signatureName').value.trim();
+                if (!signature) {
+                    alert('Please enter your name as your signature.');
+                    isValid = false;
+                }
+            }
+
+            return isValid;
+        }
+
+        function showError(input, message) {
+            let errorMsg = input.parentElement.querySelector('.error-message');
+            if (!errorMsg) {
+                errorMsg = document.createElement('div');
+                errorMsg.className = 'error-message';
+                input.parentElement.appendChild(errorMsg);
+            }
+            errorMsg.textContent = message;
+            errorMsg.classList.add('show');
+        }
+
+        function showHouseholdBreakdown() {
+            const selected = document.querySelector('input[name="householdSize"]:checked');
+            if (selected) {
+                document.getElementById('householdBreakdown').classList.remove('hidden');
+            }
+        }
+
+        function checkHoustonLimits() {
+            const selected = document.querySelector('input[name="houstonLimits"]:checked');
+            const countyQ = document.getElementById('countyQuestion');
+            if (selected && selected.value === 'no') {
+                countyQ.classList.remove('hidden');
+            } else {
+                countyQ.classList.add('hidden');
+            }
+        }
+
+        function showDisciplineQuestion() {
+            const selected = document.querySelector('input[name="isArtist"]:checked');
+            const disciplineQ = document.getElementById('disciplineQuestion');
+            if (selected && selected.value === 'yes') {
+                disciplineQ.classList.remove('hidden');
+            } else {
+                disciplineQ.classList.add('hidden');
+            }
+        }
+
+        function toggleAssistanceDetails() {
+            const selected = document.querySelector('input[name="receivedAssist"]:checked');
+            const details = document.getElementById('assistanceDetails');
+            if (selected && selected.value === 'yes') {
+                details.classList.remove('hidden');
+            } else {
+                details.classList.add('hidden');
+            }
+        }
+
+        function toggleOtherAssist() {
+            const otherField = document.getElementById('otherAssist');
+            const checkbox = event.target;
+            if (checkbox.checked) {
+                otherField.classList.remove('hidden');
+            } else {
+                otherField.classList.add('hidden');
+            }
+        }
+
+        function toggleOtherExternal() {
+            const otherField = document.getElementById('otherExternal');
+            const checkbox = event.target;
+            if (checkbox.checked) {
+                otherField.classList.remove('hidden');
+            } else {
+                otherField.classList.add('hidden');
+            }
+        }
+
+        function updateWordCount() {
+            const textarea = document.getElementById('impactStatement');
+            const wordCountDiv = document.getElementById('wordCount');
+            const text = textarea.value.trim();
+            
+            // Count words (split by whitespace and filter out empty strings)
+            const words = text.length > 0 ? text.split(/\s+/).filter(word => word.length > 0) : [];
+            const wordCount = words.length;
+            
+            // Update display
+            wordCountDiv.textContent = `${wordCount} / 500 words`;
+            
+            // Add warning class if over limit
+            if (wordCount > 500) {
+                wordCountDiv.classList.add('over-limit');
+            } else {
+                wordCountDiv.classList.remove('over-limit');
+            }
+        }
+
+        function checkConsent() {
+            const checkbox = document.getElementById('consentCheckbox');
+            const signature = document.getElementById('signatureName');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Enable submit button only if checkbox is checked AND signature field has content
+            if (checkbox.checked && signature.value.trim().length > 0) {
+                submitBtn.disabled = false;
+            } else {
+                submitBtn.disabled = true;
+            }
+        }
+
+        function calculateScore() {
+            let score = 0;
+            
+            // Household size (0-2 points)
+            const householdSize = document.querySelector('input[name="householdSize"]:checked');
+            if (householdSize) {
+                score += parseInt(householdSize.value);
+            }
+            
+            // SVI Score (0-10 points, scaled from 0-1 input)
+            const sviScore = parseFloat(document.getElementById('sviScore').value) || 0;
+            score += Math.round(sviScore * 10);
+            
+            // Vulnerability factors (0-5 points based on count)
+            const vulnCount = document.querySelectorAll('.vuln-factor:checked').length;
+            if (vulnCount >= 5) score += 5;
+            else if (vulnCount >= 3) score += 3;
+            else if (vulnCount >= 1) score += 2;
+            
+            // Housing status (0-4 points)
+            const housing = parseInt(document.getElementById('housingStatus').value) || 0;
+            score += housing;
+            
+            // Need level (0-4 points)
+            const need = parseInt(document.getElementById('needLevel').value) || 0;
+            score += need;
+            
+            // Belongings loss (0-4 points)
+            const loss = parseInt(document.getElementById('belongingsLoss').value) || 0;
+            score += loss;
+            
+            // External support (0-2 points if no support)
+            const noSupport = document.getElementById('noSupport').checked;
+            if (noSupport) score += 2;
+            
+            // Current needs count (0-3 points)
+            const needsCount = document.querySelectorAll('.current-need:checked').length;
+            if (needsCount >= 8) score += 3;
+            else if (needsCount >= 4) score += 2;
+            else if (needsCount >= 1) score += 1;
+            
+            // Display score
+            document.getElementById('totalScore').textContent = score;
+            
+            // Determine tier
+            const tierBadge = document.getElementById('tierBadge');
+            if (score >= 25) {
+                tierBadge.textContent = 'Tier 1 - Critical Priority';
+                tierBadge.style.background = '#e74c3c';
+                tierBadge.style.color = 'white';
+            } else if (score >= 15) {
+                tierBadge.textContent = 'Tier 2 - High Priority';
+                tierBadge.style.background = '#f39c12';
+                tierBadge.style.color = 'white';
+            } else if (score >= 8) {
+                tierBadge.textContent = 'Tier 3 - Moderate Priority';
+                tierBadge.style.background = '#3498db';
+                tierBadge.style.color = 'white';
+            } else {
+                tierBadge.textContent = 'Tier 4 - Low Priority';
+                tierBadge.style.background = '#95a5a6';
+                tierBadge.style.color = 'white';
+            }
+        }
+
+        function submitForm() {
+            // Show success page
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById('successPage').classList.add('active');
+            window.scrollTo(0, 0);
+        }
+
+        // Update visual feedback for checkboxes
+        document.addEventListener('click', function(e) {
+            if (e.target.type === 'checkbox' && e.target.parentElement.classList.contains('checkbox-item')) {
+                if (e.target.checked) {
+                    e.target.parentElement.classList.add('checked');
+                } else {
+                    e.target.parentElement.classList.remove('checked');
+                }
+            }
+        });
+
+        // Update radio button visual feedback
+        document.addEventListener('change', function(e) {
+            if (e.target.type === 'radio') {
+                const name = e.target.name;
+                document.querySelectorAll(`input[name="${name}"]`).forEach(radio => {
+                    if (radio.checked) {
+                        radio.parentElement.classList.add('selected');
+                    } else {
+                        radio.parentElement.classList.remove('selected');
+                    }
+                });
+            }
+        });
+
+        // Auto-calculate score when vulnerability factors change
+        document.querySelectorAll('.vuln-factor').forEach(checkbox => {
+            checkbox.addEventListener('change', calculateScore);
+        });
+
+        document.querySelectorAll('.current-need').forEach(checkbox => {
+            checkbox.addEventListener('change', calculateScore);
+        });
+
+        document.querySelectorAll('.external-support').forEach(checkbox => {
+            checkbox.addEventListener('change', calculateScore);
+        });
+
+        // Initialize tabs on page load
+        updateTabs();
+    </script>
+</body>
+</html>
