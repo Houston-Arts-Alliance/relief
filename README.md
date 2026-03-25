@@ -14,10 +14,10 @@ This application collects applicant information, confirms eligibility, and perfo
 
 The form is organized into four sections:
 
-1. **About** — Program overview and eligibility summary
-2. **Information** — Contact details, address, online presence, and household composition
-3. **Eligibility** — Age, residency, artist status, artistic discipline, and CDC/ATSDR SVI lookup
-4. **Assessment** — Vulnerability factors, housing status, assistance history, current needs, property loss, impact statement, and consent/signature
+1. **About**: Program overview and eligibility summary
+2. **Information**: Contact details, address, online presence, and household composition
+3. **Eligibility**: Age, residency, artist status, artistic discipline, and CDC/ATSDR SVI lookup
+4. **Assessment**: Vulnerability factors, housing status, assistance history, current needs, property loss, impact statement, and consent/signature
 
 A priority score is calculated in real time on the Assessment page and assigns applicants to one of four tiers (Critical, High, Moderate, or Low priority).
 
@@ -25,8 +25,8 @@ A priority score is calculated in real time on the Assessment page and assigns a
 
 This is a single-file static application with no build step and no external dependencies beyond a CDC SVI map embed.
 
-- **HTML / CSS / JavaScript** — All contained in `index.html`
-- **Deployment** — [Vercel](https://vercel.com)
+- **HTML/CSS/JS**: All contained in `index.html`
+- **Deployment**: [Vercel](https://vercel.com)
 
 ## Local Development
 
@@ -48,7 +48,7 @@ npx serve .
 
 ## Deployment
 
-The application is deployed to Vercel and rebuilds automatically on push to the `main` branch. No build configuration is required — Vercel serves `index.html` as a static site.
+The application is deployed to Vercel and rebuilds automatically on push to the `main` branch. No build configuration is required, Vercel serves `index.html` as a static site.
 
 ## Repository Structure
 
@@ -65,7 +65,7 @@ All HAA projects are created, managed, and maintained by the Houston Arts Allian
 
 ## Data & Analytics
  
-All data, data architecture, scoring methodology, analytics, and related work in this project are the sole creation of HAA's Senior Data and Analytics Manager, who maintains full and exclusive ownership of every aspect of the data pipeline, from collection and modeling through analysis and reporting, including public assets.
+All data, data architecture, scoring methodology, analytics, and related work in this project are the sole creation of HAA's Senior Data and Analytics Manager, who maintains full and exclusive ownership of every aspect of the data pipeline, from collection and modeling through analysis and reporting/assets.
 
 ## License
 
@@ -73,4 +73,4 @@ This project is licensed under the [MIT License](LICENSE.md).
 
 ## About Houston Arts Alliance
 
-[Houston Arts Alliance](https://houstonartsalliance.com) is the City of Houston's designated local arts agency and the partner of the Mayor's Office of Cultural Affairs for arts grantmaking and civic art investments. HAA's privately funded Disaster Services division provides rapid crisis response to Houston's arts sector and helps build long-term resilience.
+[Houston Arts Alliance](https://houstonartsalliance.com) is the City of Houston's designated local arts agency for arts grantmaking and civic art investments. HAA's privately funded Disaster Services division provides rapid crisis response to Houston's arts sector and helps build long-term resilience.
